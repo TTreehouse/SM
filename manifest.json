@@ -1,6 +1,6 @@
 {
-  "name": "sm pwa",
-  "short_name": "sm",
+  "name": "simp watch",
+  "short_name": "simp watch",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fdfdfd",
