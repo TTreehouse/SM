@@ -7,7 +7,7 @@ const monkeysAndStuff = [
     { name: "Eric", image: "images/Eric.jpg" },
     { name: "Joe Biden Fans", image: "images/JoeBidenFans.jpg" },
     { name: "Lobster", image: "images/Lobster.jpg" },
-    { name: "Nice mask speakers", image: "images/nicemaskspeaker.jpg" },
+    { name: "Nice mask speaker", image: "images/nicemaskspeaker.jpg" },
     { name: "Happy Birthday", image: "images/happybirthday.jpg" }
 ]
 
@@ -28,3 +28,12 @@ function showMonkeys()
 }
 
 document.addEventListener("DOMContentLoaded", showMonkeys)
+
+if ("ServiceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker
+      .register("/serviceWorker.js")
+      .then(res => console.log("service worker registered"))
+      .catch(err => console.log("service worker not registered", err))
+  })
+}
