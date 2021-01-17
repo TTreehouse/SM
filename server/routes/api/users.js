@@ -19,13 +19,9 @@ router.get("/", async function (req, res) {
 // get single member
 router.get("/:username", async function (req, res) {
 	try {
-		db.User.find({ username: req.params.username }, function (err, users) {
-			if (err) return console.error(err);
-			if (users.length > 1) {
-				//Handle this issue;
-			}
-			res.json(users[0]);
-		});
+		const user = await db.User.findOne({ username: req.params.username });
+		if (user) res.json(user);
+		else res.status(404).end();
 	} catch (err) {
 		console.error(err);
 		res.status(500).end();
@@ -64,33 +60,35 @@ router.post("/", async function (req, res) {
 });
 
 // Update member
-// router.put("/:id", async function (req, res) {
-// 	try {
-// 		// Get requested post
-// 		// Update post if there is a change
+router.put("/:username", async function (req, res) {
+	try {
+		// Get requested post
+		// Update post if there is a change
 
-// 		const postUpdate = {};
-// 		if (req.body.title) postUpdate.title = req.body.title;
-// 		if (req.body.body) postUpdate.body = req.body.body;
+		const userUpdate = {};
+		if (req.body.username) userUpdate.username = req.body.username;
+		if (req.body.password) userUpdate.password = req.body.password;
+		if (req.body.displayName) userUpdate.displayName = req.body.displayName;
+		if (req.body.biography) userUpdate.biography = req.body.biography;
 
-// 		db.User.updateOne(
-// 			{ _id: req.params.id },
-// 			postUpdate,
-// 			function (err, result) {
-// 				res.json(result);
-// 			}
-// 		);
-// 	} catch (err) {
-// 		console.error(err);
-// 		res.status(500).end();
-// 	}
-// });
+		db.User.updateOne(
+			{ username: req.params.username },
+			userUpdate,
+			function (err, result) {
+				res.json(result);
+			}
+		);
+	} catch (err) {
+		console.error(err);
+		res.status(500).end();
+	}
+});
 
 //Delete member
 
-router.delete("/:id", (req, res) => {
+router.delete("/:username", (req, res) => {
 	try {
-		db.User.deleteOne({ _id: req.params.id }, (err) => {
+		db.User.deleteOne({ username: req.params.username }, (err) => {
 			console.error(err);
 			res.status(500).end();
 		});
