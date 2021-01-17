@@ -1,1 +1,1 @@
-Project to learn js, node and react
+Project to learn MERN stack
