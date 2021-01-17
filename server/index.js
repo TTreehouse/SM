@@ -20,6 +20,8 @@ db.MongoSetup();
 
 // Loads the file ./routes/api/members to handle requests at /api/members
 app.use("/api/posts", require("./routes/api/posts"));
+app.use("/api/users", require("./routes/api/users"));
+app.use("/api/users/login", require("./routes/api/users/login"));
 
 const PORT = process.env.PORT || 5000;
 

@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 let postSchema;
 let Post;
 
+let userSchema;
+let User;
+
 exports.MongoSetup = async function MongoSetup() {
 	mongoose.connect("mongodb://localhost:27017/sm", {
 		useNewUrlParser: true,
@@ -34,25 +37,27 @@ exports.MongoSetup = async function MongoSetup() {
 		// the posts save to. for example post => posts, bus => buses
 		Post = mongoose.model("post", postSchema);
 
-		// Export postSchema and Post to be used in another file
-		exports.postSchema = postSchema;
+		userSchema = new mongoose.Schema({
+			username: String,
+			password: String,
+			displayName: String,
+			biography: String,
+			creationDate: { type: Date, default: Date.now },
+		});
+
+		userSchema.methods.authenticate = function (username, password) {
+			if (this.username === username && this.password === password)
+				//authentication passed
+				return true;
+			return false;
+		};
+
+		// the name of the model is the same as the singular version of the name of the collection
+		// the posts save to. for example post => posts, bus => buses
+		User = mongoose.model("user", userSchema);
+
+		// Export Post to be used in another file
 		exports.Post = Post;
-
-		let randomNum = String(Math.random());
-		const post1 = new Post({
-			title: "post1 " + randomNum,
-			body: "the first post " + randomNum,
-		});
-
-		/*await post1.save((err, post1) => {
-            if (err) {
-                return console.error(err);
-            }
-        });*/
-
-		Post.find(function (err, posts) {
-			if (err) return console.error(err);
-			console.log(posts);
-		});
+		exports.User = User;
 	});
 };

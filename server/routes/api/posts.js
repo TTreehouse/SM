@@ -18,7 +18,7 @@ router.get("/", async function (req, res) {
 // get single member
 router.get("/:id", async function (req, res) {
 	try {
-		db.Post.find({ _id: req.params.id }, function (err, posts) {
+		db.Post.findById(req.params.id, function (err, posts) {
 			if (err) return console.error(err);
 			if (posts.length > 1) {
 				//Handle this issue;
@@ -36,6 +36,8 @@ router.post("/", async function (req, res) {
 	try {
 		let newPost = new db.Post({ title: req.body.title, body: req.body.body });
 		if (!newPost.title || !newPost.body) {
+			console.log(req.body.title);
+			console.log(req.body.body);
 			return res.status(400).send("Title or body missing");
 		}
 		await newPost.save((err, newPost) => {
@@ -61,8 +63,8 @@ router.put("/:id", async function (req, res) {
 		if (req.body.title) postUpdate.title = req.body.title;
 		if (req.body.body) postUpdate.body = req.body.body;
 
-		db.Post.updateOne(
-			{ _id: req.params.id },
+		db.Post.findByIdAndUpdate(
+			req.params.id,
 			postUpdate,
 			function (err, result) {
 				res.json(result);
@@ -78,7 +80,7 @@ router.put("/:id", async function (req, res) {
 
 router.delete("/:id", (req, res) => {
 	try {
-		db.Post.deleteOne({ _id: req.params.id }, (err) => {
+		db.Post.findByIdAndDelete(req.params.id, (err) => {
 			console.error(err);
 			res.status(500).end();
 		});
