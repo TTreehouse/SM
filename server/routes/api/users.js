@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const router = express.Router();
 const db = require("../../db");
+const authSession_1 = require("../../middleware/authSession");
 // Gets all members
 router.get("/", async function (req, res) {
     try {
@@ -18,33 +19,45 @@ router.get("/", async function (req, res) {
     }
 });
 // get single member
-router.get("/:username", async function (req, res) {
+router.get("/:username", authSession_1.authSession, async function (req, res) {
     try {
-        const user = await db.User.findOne({ username: req.params.username });
-        if (user)
-            res.json(user);
-        else
-            res.status(404).end();
+        if (!res.headersSent) {
+            const user = await db.User.findOne({
+                username: req.params.username,
+            });
+            if (user != null && user != undefined) {
+                if (authSession_1.authUser(req, res, user.id)) {
+                    res.json(user.sendableUser());
+                }
+                else
+                    res.status(401).send("Not authorized to access this user");
+            }
+            else
+                res.status(404).end();
+        }
     }
     catch (err) {
         console.error(err);
         res.status(500).end();
+        return;
     }
 });
 //Create Post
 router.post("/", async function (req, res) {
     try {
+        let dateNow = Date.now();
         let newUser = new db.User({
             username: req.body.username,
             password: req.body.password,
             displayName: req.body.displayName,
             biography: req.body.biography,
+            creationDate: dateNow,
+            sessionKeys: [],
         });
         if (!newUser.username ||
             !newUser.password ||
             !newUser.displayName ||
             !newUser.biography) {
-            console.log(newUser);
             return res.status(400).send("Missing information");
         }
         await newUser.save((err, newUser) => {

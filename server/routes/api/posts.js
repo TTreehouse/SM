@@ -4,13 +4,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db");
 // Gets all members
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        db.Post.find(function (err, posts) {
-            if (err)
-                return console.error(err);
-            res.json(posts);
-        });
+        const posts = await db.Post.find().sort({ date: -1 });
+        res.json(posts);
     }
     catch (err) {
         console.error(err);
@@ -18,26 +15,23 @@ router.get("/", (req, res) => {
     }
 });
 // get single member
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
-        db.Post.findById(req.params.id, function (err, posts) {
-            if (err)
-                return console.error(err);
-            res.json(posts[0]);
-        });
+        let post = await db.Post.findById(req.params.id);
+        res.json(post);
     }
     catch (err) {
         console.error(err);
         res.status(500).end();
+        return;
     }
 });
 // Create Post
 router.post("/", async function (req, res) {
     try {
-        console.log(req.body);
         let newPost = new db.Post({ content: req.body.content });
         if (!newPost.content) {
-            return res.status(400).send("content missing");
+            return res.status(400).send("Content missing");
         }
         await newPost.save((err, newPost) => {
             if (err) {

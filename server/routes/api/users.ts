@@ -2,6 +2,7 @@ import express = require("express");
 const router = express.Router();
 import db = require("../../db");
 import uuid = require("uuid");
+import { authSession, authUser } from "../../middleware/authSession";
 
 // Gets all members
 router.get("/", async function (req, res) {
@@ -17,25 +18,36 @@ router.get("/", async function (req, res) {
 });
 
 // get single member
-router.get("/:username", async function (req, res) {
+router.get("/:username", authSession, async function (req, res) {
 	try {
-		const user = await db.User.findOne({ username: req.params.username });
-		if (user) res.json(user);
-		else res.status(404).end();
+		if (!res.headersSent) {
+			const user: db.IUser = await db.User.findOne({
+				username: req.params.username,
+			});
+			if (user != null && user != undefined) {
+				if (authUser(req, res, user.id)) {
+					res.json(user.sendableUser());
+				} else res.status(401).send("Not authorized to access this user");
+			} else res.status(404).end();
+		}
 	} catch (err) {
 		console.error(err);
 		res.status(500).end();
+		return;
 	}
 });
 
 //Create Post
 router.post("/", async function (req, res) {
 	try {
+		let dateNow: number = Date.now();
 		let newUser = new db.User({
 			username: req.body.username,
 			password: req.body.password,
 			displayName: req.body.displayName,
 			biography: req.body.biography,
+			creationDate: dateNow,
+			sessionKeys: [],
 		});
 		if (
 			!newUser.username ||
@@ -43,7 +55,6 @@ router.post("/", async function (req, res) {
 			!newUser.displayName ||
 			!newUser.biography
 		) {
-			console.log(newUser);
 			return res.status(400).send("Missing information");
 		}
 		await newUser.save((err, newUser) => {
