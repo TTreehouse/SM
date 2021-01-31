@@ -11,7 +11,8 @@ interface IPost extends mongoose.Document {
 
 interface IUser extends mongoose.Document {
 	username: string;
-	password: string;
+	hash: string;
+	salt: string;
 	displayName: string;
 	biography: string;
 	sessionKeys: { key: string; expiry: number }[];
@@ -43,7 +44,8 @@ let MongoSetup = () => {
 
 		let userSchema = new mongoose.Schema({
 			username: String,
-			password: String,
+			hash: String,
+			salt: String,
 			displayName: String,
 			biography: String,
 			sessionKeys: { type: [{ key: String, expiry: Number }] },

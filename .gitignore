@@ -117,18 +117,25 @@ server/.tern-port
 server/.vscode-test
 
 ### react ###
-client/.DS_*
-client/**/*.backup.*
-client/**/*.back.*
+[Cc]lient/.DS_*
+[Cc]lient/**/*.backup.*
+[Cc]lient/**/*.back.*
 
-client/node_modules
+[Cc]lient/node_modules
 
-client/*.sublime*
+[Cc]lient/*.sublime*
 
-client/psd
-client/thumb
-client/sketch
+[Cc]lient/psd
+[Cc]lient/thumb
+[Cc]lient/sketch
 
-client/.eslintcache
+[Cc]lient/.eslintcache
 
+[Cc]lient/build
 # End of https://www.toptal.com/developers/gitignore/api/react,node
+
+Client/build/static/js/2.51ed5457.chunk.js
+
+Client/build/static/js/2.51ed5457.chunk.js.LICENSE.txt
+
+Client/build/static/js/2.51ed5457.chunk.js.map

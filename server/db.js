@@ -24,7 +24,8 @@ let MongoSetup = () => {
         exports.Post = Post = mongoose.model("Post", postSchema);
         let userSchema = new mongoose.Schema({
             username: String,
-            password: String,
+            hash: String,
+            salt: String,
             displayName: String,
             biography: String,
             sessionKeys: { type: [{ key: String, expiry: Number }] },

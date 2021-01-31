@@ -1,19 +1,22 @@
+import cookieParser = require("cookie-parser");
+import { cookieSecret } from "..";
 import db = require("../db");
 
 export { authSession, authUser };
 
 const authSession = async (req, res, next) => {
-	if ("user_id" in req.cookies && "session_id" in req.cookies) {
-		let user: db.IUser = await db.User.findById(req.cookies.user_id);
+	if ("user_id" in req.signedCookies && "session_id" in req.signedCookies) {
+		cookieParser.signedCookies(req.signedCookies, cookieSecret);
+		let user: db.IUser = await db.User.findById(req.signedCookies.user_id);
 		if (user != undefined) {
 			let authenticated: boolean = false;
 			let expired = false;
 			if (user.sessionKeys != undefined) {
 				user.sessionKeys.forEach((key, i) => {
 					if (key.expiry < Date.now()) {
-						if (key.key === req.cookies.session_id) expired = true;
+						if (key.key === req.signedCookies.session_id) expired = true;
 						user.sessionKeys.splice(i, 1);
-					} else if (key.key === req.cookies.session_id) {
+					} else if (key.key === req.signedCookies.session_id) {
 						authenticated = true;
 					}
 				});
@@ -34,7 +37,8 @@ const authSession = async (req, res, next) => {
 };
 
 let authUser = (req, res, authorizedId): boolean => {
-	if (req.cookies.user_id === authorizedId) return true;
+	cookieParser.signedCookies(req.signedCookies, cookieSecret);
+	if (req.signedCookies.user_id === authorizedId) return true;
 	else {
 		//res.status(401).send("User not allowed to access this content").end();
 		return false;
