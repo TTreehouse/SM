@@ -5,17 +5,18 @@ let Post: mongoose.Model<IPost>;
 let User: mongoose.Model<IUser>;
 
 interface IPost extends mongoose.Document {
-	content: String;
-	date: Date;
+	content: string;
+	date: number;
 }
 
 interface IUser extends mongoose.Document {
-	username: String;
-	password: String;
-	displayName: String;
-	biography: String;
-	sessionKeys: { type: [{ key: String; expiry: Date }]; default: [] };
-	creationDate: { type: Date };
+	username: string;
+	password: string;
+	displayName: string;
+	biography: string;
+	sessionKeys: { key: string; expiry: number }[];
+	creationDate: number;
+	sendableUser(): object;
 }
 
 export { MongoSetup, Post, User, IPost, IUser };
@@ -33,7 +34,7 @@ let MongoSetup = () => {
 		// Connection achieved.
 		let postSchema = new mongoose.Schema({
 			content: String,
-			date: { type: Date, default: Date.now },
+			date: { type: Number, default: Date.now },
 		});
 
 		// the name of the model is the same as the singular version of the name of the collection
@@ -45,9 +46,18 @@ let MongoSetup = () => {
 			password: String,
 			displayName: String,
 			biography: String,
-			sessionKeys: { type: [{ key: String, expiry: Date }], default: [] },
-			creationDate: { type: Date, default: Date.now },
+			sessionKeys: { type: [{ key: String, expiry: Number }] },
+			creationDate: Number,
 		});
+
+		userSchema.methods.sendableUser = function (): object {
+			const user: any = this;
+			return {
+				username: user.username,
+				displayName: user.displayName,
+				biography: user.biography,
+			};
+		};
 
 		// the name of the model is the same as the singular version of the name of the collection
 		// the posts save to. for example post => posts, bus => buses

@@ -1,23 +1,29 @@
 import express = require("express");
 import path = require("path");
-import logger = require("./middleware/logger");
+import cors = require("cors");
+import cookieParser = require("cookie-parser");
+var fs = require("fs");
+var https = require("https");
+
 //runs code in db file
 import db = require("./db");
-import { authSession } from "./authSession";
-import cookieParser = require("cookie-parser");
+import {
+	createSessionId,
+	clearSessionIds,
+	sessionIdLifeTime,
+} from "./sessionHandler";
+import { authSession } from "./middleware/authSession";
 
 const app = express();
 
 // init middleware
-app.use(logger);
+//app.use(logger);
+app.use(cors());
 
 // Initialize body parser middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
-// Set a static folder
-app.use(express.static(path.join(__dirname, "public")));
 
 db.MongoSetup();
 
@@ -30,17 +36,35 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 app.get("/lmao", async (req, res) => {
-	res.cookie("session_id", req.body.id);
-	res.json(req.body);
+	try {
+		let key: string = await createSessionId(
+			await db.User.findById(req.body.id)
+		);
+		let cookieOptions = {
+			//path: "/session",
+			expires: new Date(Date.now() + 86400000 * sessionIdLifeTime),
+		};
+		res.cookie("user_id", req.body.id, cookieOptions);
+		res.cookie("session_id", key, cookieOptions);
+		res.end();
+	} catch {
+		res.status(400).send("Missing user_id").end();
+	}
 });
 
-app.get("/protected", async (req, res) => {
+app.get("/protected", authSession, async (req, res) => {
+	res.send("hey well done you have hacked the system");
+});
+
+app.get("/clear", async (req, res) => {
 	try {
-		if ("session_id" in req.cookies) {
-			await authSession(req.cookies.session_id);
+		if ("id" in req.body) {
+			clearSessionIds(req.body.id);
 			res.end();
-		} else res.status(401).end();
+		} else {
+			res.status(400).end();
+		}
 	} catch {
-		res.status(400).end();
+		res.status(500).end();
 	}
 });

@@ -17,7 +17,7 @@ let MongoSetup = () => {
         // Connection achieved.
         let postSchema = new mongoose.Schema({
             content: String,
-            date: { type: Date, default: Date.now },
+            date: { type: Number, default: Date.now },
         });
         // the name of the model is the same as the singular version of the name of the collection
         // the posts save to. for example post => posts, bus => buses
@@ -27,9 +27,17 @@ let MongoSetup = () => {
             password: String,
             displayName: String,
             biography: String,
-            sessionKeys: { type: [{ key: String, expiry: Date }], default: [] },
-            creationDate: { type: Date, default: Date.now },
+            sessionKeys: { type: [{ key: String, expiry: Number }] },
+            creationDate: Number,
         });
+        userSchema.methods.sendableUser = function () {
+            const user = this;
+            return {
+                username: user.username,
+                displayName: user.displayName,
+                biography: user.biography,
+            };
+        };
         // the name of the model is the same as the singular version of the name of the collection
         // the posts save to. for example post => posts, bus => buses
         exports.User = User = mongoose.model("User", userSchema);
