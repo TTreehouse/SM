@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.12",
+    "sha.js": "^2.4.11",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -105,6 +105,5 @@ router.delete("/:username", (req, res) => {
         res.status(500).end();
     }
 });
-router.post("/login");
 module.exports = router;
 //# sourceMappingURL=users.js.map

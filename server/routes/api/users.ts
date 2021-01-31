@@ -101,6 +101,4 @@ router.delete("/:username", (req, res) => {
 	}
 });
 
-router.post("/login");
-
 module.exports = router;
