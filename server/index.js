@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 var fs = require("fs");
 var https = require("https");
+var shajs = require("sha.js");
 //runs code in db file
 const db = require("./db");
 const sessionHandler_1 = require("./sessionHandler");
