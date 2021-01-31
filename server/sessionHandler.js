@@ -24,7 +24,7 @@ let createSessionId = (user) => {
         };
         user.sessionKeys.push(newKey);
         user.save();
-        resolve(newKey.key);
+        resolve({ key: newKey.key, expiry: newKey.expiry });
     });
 };
 exports.createSessionId = createSessionId;

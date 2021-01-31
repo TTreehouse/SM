@@ -5,7 +5,7 @@ const sessionIdLifeTime = 7;
 
 export { createSessionId, clearSessionIds, sessionIdLifeTime };
 
-let createSessionId = (user: db.IUser): Promise<string> => {
+let createSessionId = (user: db.IUser): Promise<any> => {
 	return new Promise(async (resolve, reject) => {
 		if (user != null && user != undefined) {
 			user.sessionKeys.forEach((key, i) => {
@@ -23,7 +23,7 @@ let createSessionId = (user: db.IUser): Promise<string> => {
 		};
 		user.sessionKeys.push(newKey);
 		user.save();
-		resolve(newKey.key);
+		resolve({ key: newKey.key, expiry: newKey.expiry });
 	});
 };
 

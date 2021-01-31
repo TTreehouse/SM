@@ -15,15 +15,15 @@ router.post("/", async (req, res) => {
 		let authenticated = checkSalt(req.body.password, user.salt, user.hash);
 
 		if (authenticated) {
-			let key: string = await createSessionId(user);
+			let sessionId: any = await createSessionId(user);
 			let cookieOptions = {
 				//path: "/session",
-				expires: new Date(Date.now() + 86400000 * sessionIdLifeTime),
+				expires: sessionId.expiry,
 				httpOnly: true,
 				signed: true,
 			};
 			res.cookie("user_id", user.id, cookieOptions);
-			res.cookie("session_id", key, cookieOptions);
+			res.cookie("session_id", sessionId.key, cookieOptions);
 
 			return res.json(user.sendableUser());
 		} else return res.status(400).end();

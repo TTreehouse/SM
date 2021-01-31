@@ -8,11 +8,7 @@ import shajs = require("sha.js");
 
 //runs code in db file
 import db = require("./db");
-import {
-	createSessionId,
-	clearSessionIds,
-	sessionIdLifeTime,
-} from "./sessionHandler";
+import { clearSessionIds } from "./sessionHandler";
 import { authSession } from "./middleware/authSession";
 
 const app = express();
