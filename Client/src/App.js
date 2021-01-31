@@ -44,7 +44,7 @@ function App() {
 	return (
 		<div className='App'>
 			<Header text='not twitter' />
-			<Post placeholder="what's not happening?" onAdd={post} />
+			<Post placeholder="what's not happening" onAdd={post} />
 			<NotTweets notTweets={notTweets}></NotTweets>
 			<Refresh onClick={refresh}></Refresh>
 		</div>
