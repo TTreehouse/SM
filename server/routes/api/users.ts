@@ -41,6 +41,8 @@ router.get("/:username", authSession, async function (req, res) {
 router.post("/", async function (req, res) {
 	try {
 		let dateNow: number = Date.now();
+		// Hash here
+
 		let newUser = new db.User({
 			username: req.body.username,
 			password: req.body.password,
