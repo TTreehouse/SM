@@ -9,7 +9,7 @@ const db = require("./db");
 const sessionHandler_1 = require("./sessionHandler");
 const authSession_1 = require("./middleware/authSession");
 const app = express();
-const cookieSecret = "BccIZNwhqA4V9ooxJ3jl";
+const cookieSecret = "BccIZNwhqA4V9ooxJ3ll";
 exports.cookieSecret = cookieSecret;
 // init middleware
 //app.use(logger);

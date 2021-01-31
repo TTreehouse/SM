@@ -17,7 +17,7 @@ import { authSession } from "./middleware/authSession";
 
 const app = express();
 
-const cookieSecret = "BccIZNwhqA4V9ooxJ3jl";
+const cookieSecret = "BccIZNwhqA4V9ooxJ3ll";
 
 export { cookieSecret };
 
