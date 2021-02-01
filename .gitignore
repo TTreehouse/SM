@@ -116,7 +116,11 @@ server/.tern-port
 # Stores VSCode versions used for testing VSCode extensions
 server/.vscode-test
 
+server/.idea
+
 ### react ###
+
+[Cc]lient/.idea
 [Cc]lient/.DS_*
 [Cc]lient/**/*.backup.*
 [Cc]lient/**/*.back.*
