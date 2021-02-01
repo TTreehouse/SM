@@ -36,6 +36,8 @@ let MongoSetup = () => {
 		let postSchema = new mongoose.Schema({
 			content: String,
 			date: { type: Number, default: Date.now },
+			posterId: "string",
+			parent: "string",
 		});
 
 		// the name of the model is the same as the singular version of the name of the collection

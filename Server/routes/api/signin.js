@@ -17,9 +17,9 @@ router.post("/", async (req, res) => {
         let authenticated = salter_1.checkSalt(req.body.password, user.salt, user.hash);
         if (authenticated) {
             let sessionId = await sessionHandler_1.createSessionId(user);
+            console.log(typeof sessionId.expiry);
             let cookieOptions = {
-                //path: "/session",
-                expires: sessionId.expiry,
+                expires: new Date(sessionId.expiry),
                 httpOnly: true,
                 signed: true,
             };

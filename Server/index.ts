@@ -16,7 +16,6 @@ const app = express();
 let cookieSecret: string;
 if (fs.existsSync("./cookie-secret.txt")) {
 	cookieSecret = fs.readFileSync("./cookie-secret.txt", "utf8");
-	console.log(cookieSecret);
 } else {
 	cookieSecret = "";
 	console.error(

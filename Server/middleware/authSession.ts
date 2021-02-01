@@ -23,14 +23,14 @@ const authSession = async (req, res, next) => {
 			}
 			user.save();
 			if (!authenticated) {
-				if (expired) res.status(401).send("session_id expired").end();
-				else res.status(401).send("session_id not found").end(); // User not authenticated
+				if (expired) res.status(401).end();
+				else res.status(401).end();
 			}
 		} else {
-			res.status(401).send("user_id not found").end();
+			res.status(401).end();
 		}
 	} else {
-		res.status(401).send("Cookie missing information").end();
+		res.status(401).end();
 	}
 
 	next();

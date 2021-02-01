@@ -16,9 +16,9 @@ router.post("/", async (req, res) => {
 
 		if (authenticated) {
 			let sessionId: any = await createSessionId(user);
+			console.log(typeof sessionId.expiry);
 			let cookieOptions = {
-				//path: "/session",
-				expires: sessionId.expiry,
+				expires: new Date(sessionId.expiry),
 				httpOnly: true,
 				signed: true,
 			};

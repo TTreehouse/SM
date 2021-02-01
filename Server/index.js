@@ -14,7 +14,6 @@ let cookieSecret;
 exports.cookieSecret = cookieSecret;
 if (fs.existsSync("./cookie-secret.txt")) {
     exports.cookieSecret = cookieSecret = fs.readFileSync("./cookie-secret.txt", "utf8");
-    console.log(cookieSecret);
 }
 else {
     exports.cookieSecret = cookieSecret = "";
