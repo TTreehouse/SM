@@ -4,13 +4,22 @@ exports.cookieSecret = void 0;
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const fs = require("fs");
 //runs code in db file
 const db = require("./db");
 const sessionHandler_1 = require("./sessionHandler");
 const authSession_1 = require("./middleware/authSession");
 const app = express();
-const cookieSecret = "BccIZNwhqA4V9ooxJ3ll";
+let cookieSecret;
 exports.cookieSecret = cookieSecret;
+if (fs.existsSync("./cookie-secret.txt")) {
+    exports.cookieSecret = cookieSecret = fs.readFileSync("./cookie-secret.txt", "utf8");
+    console.log(cookieSecret);
+}
+else {
+    exports.cookieSecret = cookieSecret = "";
+    console.error("Cookie secret not provided or found. Authentication will be broken and no one will pass.");
+}
 // init middleware
 //app.use(logger);
 app.use(cors());

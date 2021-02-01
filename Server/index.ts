@@ -13,7 +13,16 @@ import { authSession } from "./middleware/authSession";
 
 const app = express();
 
-const cookieSecret = "BccIZNwhqA4V9ooxJ3ll";
+let cookieSecret: string;
+if (fs.existsSync("./cookie-secret.txt")) {
+	cookieSecret = fs.readFileSync("./cookie-secret.txt", "utf8");
+	console.log(cookieSecret);
+} else {
+	cookieSecret = "";
+	console.error(
+		"Cookie secret not provided or found. Authentication will be broken and no one will pass."
+	);
+}
 
 export { cookieSecret };
 
