@@ -17,7 +17,7 @@ if (fs.existsSync("./cookie-secret.txt")) {
 }
 else {
     exports.cookieSecret = cookieSecret = "";
-    console.error("Cookie secret not provided or found. Authentication will be broken and no one will pass.");
+    console.error('"cookie-secret.txt" Authentication will be broken and no one will pass.');
 }
 // init middleware
 //app.use(logger);
