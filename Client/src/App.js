@@ -6,14 +6,10 @@ import Refresh from "./components/Refresh";
 
 function App() {
 	const [notTweets, setTweets] = useState([]);
-	useEffect(() => {
-		const getTweets = async () => {
-			const tweetsFromServer = await fetchTweets();
-			setTweets(tweetsFromServer);
-			console.log(tweetsFromServer);
-		};
-
-		getTweets();
+	useEffect(async () => {
+		const tweetsFromServer = await fetchTweets();
+		setTweets(tweetsFromServer);
+		console.log(tweetsFromServer);
 	}, []);
 
 	const fetchTweets = async () => {
@@ -37,8 +33,9 @@ function App() {
 	};
 
 	const refresh = async () => {
-		setTweets([notTweets]);
-		console.log("refreshed");
+		const tweets = await fetchTweets();
+		setTweets(tweets);
+		console.log("refreshed.");
 	};
 
 	return (
